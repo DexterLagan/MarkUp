@@ -4,6 +4,13 @@ A minimal, fast **Markdown editor with live visualizer** for macOS and Windows. 
 
 Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net), and [remarkable](https://github.com/jonschlinkert/remarkable).
 
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="docs/screenshots/light.png" alt="MarkUp in light mode" /></td>
+    <td width="50%" align="center"><img src="docs/screenshots/dark.png" alt="MarkUp in dark mode" /></td>
+  </tr>
+</table>
+
 > **Why?** Importing Markdown into Apple Notes is cumbersome, and many existing macOS editors (e.g. MacDown) are Intel-only and require Rosetta on Apple Silicon. MarkUp compiles natively for Apple Silicon and cross-builds for Windows x64 via GitHub Actions.
 
 ## Features
@@ -107,6 +114,8 @@ MarkUp/
 ├── .github/
 │   └── workflows/
 │       └── build-windows.yml      # CI: Windows x64 build (manual dispatch)
+├── docs/
+│   └── screenshots/               # README screenshots (light & dark mode)
 ├── icon-source.png                # Master 1024×1024 app icon
 ├── scripts/
 │   └── gen-icon.mjs               # Generates all platform icons from the master
