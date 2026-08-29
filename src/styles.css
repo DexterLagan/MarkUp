@@ -55,6 +55,14 @@ body {
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
 }
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+}
 .brand {
   display: flex;
   align-items: center;

@@ -10,30 +10,30 @@
     </script>
   </head>
   <body>
-    <header id="toolbar" data-tauri-drag-region>
-      <div class="brand" data-tauri-drag-region>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="1" y="4" width="22" height="16" rx="3" stroke="currentColor" stroke-width="1.6" />
-          <path
-            d="M5.5 15V9l3 3 3-3v6"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M17 9v6m0 0-2.4-2.4M17 15l2.4-2.4"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        MarkUp
+    <header id="toolbar">
+      <div class="toolbar-left" data-tauri-drag-region>
+        <div class="brand">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="1" y="4" width="22" height="16" rx="3" stroke="currentColor" stroke-width="1.6" />
+            <path
+              d="M5.5 15V9l3 3 3-3v6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M17 9v6m0 0-2.4-2.4M17 15l2.4-2.4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          MarkUp
+        </div>
+        <span id="fileLabel"><span id="dirtyDot">•</span><span id="fileName">untitled</span></span>
       </div>
-      <span id="fileLabel" data-tauri-drag-region
-        ><span id="dirtyDot">•</span><span id="fileName">untitled</span></span
-      >
       <div class="actions">
         <button id="btnNew" title="New document (⌘N)">New</button>
         <button id="btnOpen" title="Open… (⌘O)">Open…</button>
