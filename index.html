@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MarkUp</title>
+    <script>
+      document.documentElement.dataset.theme =
+        matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    </script>
+  </head>
+  <body>
+    <header id="toolbar" data-tauri-drag-region>
+      <div class="brand" data-tauri-drag-region>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="1" y="4" width="22" height="16" rx="3" stroke="currentColor" stroke-width="1.6" />
+          <path
+            d="M5.5 15V9l3 3 3-3v6"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M17 9v6m0 0-2.4-2.4M17 15l2.4-2.4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        MarkUp
+      </div>
+      <span id="fileLabel" data-tauri-drag-region
+        ><span id="dirtyDot">•</span><span id="fileName">untitled</span></span
+      >
+      <div class="actions">
+        <button id="btnNew" title="New document (⌘N)">New</button>
+        <button id="btnOpen" title="Open… (⌘O)">Open…</button>
+        <button id="btnSave" title="Save (⌘S)">Save</button>
+        <button id="btnTheme" title="Toggle light/dark theme">◐</button>
+      </div>
+    </header>
+    <main id="panes">
+      <section id="editorPane">
+        <div id="editor"></div>
+      </section>
+      <div id="divider" title="Drag to resize"></div>
+      <section id="previewPane">
+        <div id="preview"></div>
+      </section>
+    </main>
+    <footer id="statusbar">
+      <span id="wordCount">0 words</span>
+      <span id="charCount">0 characters</span>
+      <span class="spacer"></span>
+      <span id="cursorPos">Ln 1, Col 1</span>
+    </footer>
+    <div id="toast"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
