@@ -14,6 +14,7 @@ import {
   save as saveDialog,
 } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { appDataDir, join } from "@tauri-apps/api/path";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import "./styles.css";
@@ -274,8 +275,26 @@ async function loadFile(path) {
     dirty = false;
     setFileLabel(path.split("/").pop());
     syncStatus();
+    return true;
   } catch (err) {
     toast(`Could not open file: ${err}`);
+    return false;
+  }
+}
+
+let dropLogReady = appDataDir().then((dir) => join(dir, "drop.log"));
+async function dropLog(line) {
+  try {
+    const logPath = await dropLogReady;
+    let existing = "";
+    try {
+      existing = await readTextFile(logPath);
+    } catch {
+      /* first entry */
+    }
+    await writeTextFile(logPath, existing + `${new Date().toISOString()}\t${line}\n`);
+  } catch {
+    /* diagnostics only */
   }
 }
 
@@ -397,23 +416,37 @@ window.addEventListener("drop", async (e) => {
   dragDepth = 0;
   document.body.classList.remove("dragging");
   const file = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (!file) return;
+  if (!file) {
+    dropLog(`DROP with no file (types: ${e.dataTransfer.types})`);
+    return;
+  }
   if (file.path) {
-    await loadFile(file.path);
-  } else {
-    try {
-      const text = await file.text();
-      editorView.dispatch({
-        changes: { from: 0, to: editorView.state.doc.length, insert: text },
-      });
-      currentPath = null;
-      dirty = true;
-      setFileLabel(file.name);
-      syncStatus();
-    } catch (err) {
-      toast(`Could not open file: ${err}`);
+    dropLog(`DROP path="${file.path}" name="${file.name}"`);
+    if (await loadFile(file.path)) {
+      toast(`Opened ${file.name}`);
+    } else {
+      await ingestDroppedText(file);
     }
+  } else {
+    dropLog(`DROP no path (name: "${file.name}", type: "${file.type}")`);
+    await ingestDroppedText(file);
   }
 });
+
+async function ingestDroppedText(file) {
+  try {
+    const text = await file.text();
+    editorView.dispatch({
+      changes: { from: 0, to: editorView.state.doc.length, insert: text },
+    });
+    currentPath = null;
+    dirty = true;
+    setFileLabel(file.name || "dropped file");
+    syncStatus();
+    toast(`Opened ${file.name || "dropped file"} (contents)`);
+  } catch (err) {
+    toast(`Could not open file: ${err}`);
+  }
+}
 
 syncStatus();
