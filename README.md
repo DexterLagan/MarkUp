@@ -82,7 +82,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 - **Save dialog:** defaults to `untitled.md`, `md` filter
 - **Drag & drop:** opens dropped files in place (path-based on macOS/Windows; text fallback in the webview)
 - **Guards:** dirty state blocks New/Open via confirm dialog and blocks window unload
-- **Associations:** `bundle.fileAssociations` declares `.md` / `.markdown` / `.mdown` with role *Editor* (→ `CFBundleDocumentTypes` on macOS). `RunEvent::Opened` forwards the path to the frontend, which queues it in Rust (so cold-launch opens aren't lost) and loads it on startup and live
+- **Associations:** `bundle.fileAssociations` declares `.md` / `.markdown` / `.mdown` with role *Editor* (→ `CFBundleDocumentTypes` on macOS, file-type registrations on Windows, MIME in the `.desktop` entry on Linux). The path is forwarded to the frontend per platform — `RunEvent::Opened` on macOS, the launch argument on Windows/Linux — and queued in Rust (so cold-launch opens aren't lost) before being loaded on startup and live. `tauri-plugin-single-instance` keeps MarkUp to one instance, forwarding the file from a re-launch (Windows/Linux) to the running instance
 - **Setting as default (macOS):** right-click any `.md` → *Get Info* → *Open with* → **MarkUp** → *Change All…* — or double-click once and confirm the picker
 
 ### Keyboard shortcuts
