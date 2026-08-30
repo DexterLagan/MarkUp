@@ -1,6 +1,6 @@
 # MarkUp
 
-A minimal, fast **Markdown editor with live visualizer** for macOS and Windows. Edit on the left, watch the rendered document on the right — local files, no cloud, no accounts, no bloat.
+A minimal, fast **Markdown editor with live visualizer** for macOS, Windows, and Linux. Edit on the left, watch the rendered document on the right — local files, no cloud, no accounts, no bloat.
 
 Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net), and [remarkable](https://github.com/jonschlinkert/remarkable).
 
@@ -11,7 +11,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
   </tr>
 </table>
 
-> **Why?** Importing Markdown into Apple Notes is cumbersome, and many existing macOS editors (e.g. MacDown) are Intel-only and require Rosetta on Apple Silicon. MarkUp compiles natively for Apple Silicon and cross-builds for Windows x64 via GitHub Actions.
+> **Why?** Importing Markdown into Apple Notes is cumbersome, and many existing macOS editors (e.g. MacDown) are Intel-only and require Rosetta on Apple Silicon. MarkUp builds natively for Apple Silicon, with Windows x64 and Linux x64 built by GitHub Actions and published as tagged releases.
 
 ## Features
 
@@ -20,6 +20,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 - **Full GFM Markdown** — tables, strikethrough, task lists, autolinks, and nested lists via remarkable
 - **Code highlighting** — fenced code blocks in the preview highlighted by [highlight.js](https://highlightjs.org) (~190 languages); the editor itself has Markdown syntax highlighting with a GitHub-style palette
 - **File handling** — open/save dialogs (`.md`, `.markdown`, `.mdown`, `.txt`), plus drag & drop a file onto the window to open it
+- **Open from Finder** — registered as the editor for `.md`, `.markdown`, and `.mdown` files: double-click a document to open it in MarkUp (works on launch *and* when MarkUp is already running)
 - **Unsaved-changes guard** — dirty indicator dot and confirmation before discarding edits
 - **Light/dark themes** — follows the system appearance on launch, with a manual toggle in the toolbar
 - **Status bar** — live word count, character count, and cursor position (`Ln / Col`)
@@ -37,7 +38,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 | Markdown engine | [remarkable](https://github.com/jonschlinkert/remarkable) 2.x |
 | Code highlighting | [highlight.js](https://highlightjs.org) 11.x |
 | System integration | `tauri-plugin-fs` + `tauri-plugin-dialog` (v2) |
-| CI (Windows) | GitHub Actions (`windows-latest`, MSVC x64), manual dispatch |
+| CI / Release | GitHub Actions (`release.yml`) — builds macOS (aarch64), Windows (x64), and Linux (x64) and publishes a tagged release |
 
 ### Markdown engine configuration
 
@@ -81,6 +82,8 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 - **Save dialog:** defaults to `untitled.md`, `md` filter
 - **Drag & drop:** opens dropped files in place (path-based on macOS/Windows; text fallback in the webview)
 - **Guards:** dirty state blocks New/Open via confirm dialog and blocks window unload
+- **Associations:** `bundle.fileAssociations` declares `.md` / `.markdown` / `.mdown` with role *Editor* (→ `CFBundleDocumentTypes` on macOS). `RunEvent::Opened` forwards the path to the frontend, which queues it in Rust (so cold-launch opens aren't lost) and loads it on startup and live
+- **Setting as default (macOS):** right-click any `.md` → *Get Info* → *Open with* → **MarkUp** → *Change All…* — or double-click once and confirm the picker
 
 ### Keyboard shortcuts
 
@@ -96,6 +99,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 | --- | --- | --- |
 | macOS | 10.15+ | Native Apple Silicon build; x86_64 build also possible via `--target x86_64-apple-darwin` |
 | Windows | 10 / 11 x64 | Requires WebView2 runtime (preinstalled on Win 11); NSIS + MSI installers |
+| Linux | x64 (glibc) | Requires WebKitGTK 4.1 + GTK3 runtime; `.deb`, `.rpm` (Arch: `webkit2gtk`) |
 
 ### Release profile (Rust)
 
@@ -113,7 +117,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 MarkUp/
 ├── .github/
 │   └── workflows/
-│       └── build-windows.yml      # CI: Windows x64 build (manual dispatch)
+│       └── release.yml            # CI: macOS aarch64 + Windows x64 + Linux x64 → tagged release
 ├── docs/
 │   └── screenshots/               # README screenshots (light & dark mode)
 ├── icon-source.png                # Master 1024×1024 app icon
@@ -147,6 +151,7 @@ MarkUp/
 - Platform prerequisites per Tauri:
   - macOS: Xcode command line tools (`xcode-select --install`)
   - Windows: Microsoft C++ Build Tools and the WebView2 runtime
+  - Linux: WebKitGTK 4.1 dev packages (e.g. `libwebkit2gtk-4.1-dev`, `librsvg2-dev`, `libayatana-appindicator3-dev`)
 
 ### Run in development
 
@@ -167,19 +172,24 @@ npm run tauri build
 # -> src-tauri/target/release/bundle/macos/MarkUp.app
 ```
 
-**Windows x64 (via GitHub Actions):**
+**Windows x64 / Linux x64 (local):**
 
-1. Push changes to `main`.
-2. In the repository's **Actions** tab, run the **Build Windows** workflow (manual dispatch).
-3. Download the `MarkUp-windows-x64` artifact from the run — it contains the NSIS installer (`.exe`) and MSI under `src-tauri/target/x86_64-pc-windows-msvc/release/bundle/`.
+```sh
+# On the target OS (WebKitGTK deps required on Linux)
+npm ci
+npm run tauri build
+# -> src-tauri/target/release/bundle/{nsis,msi,deb,rpm}/
+```
 
 ### Cutting a release
 
-1. Bump the version in `package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`.
-2. Build macOS locally and Windows via the Actions workflow.
-3. Publish with `gh release create vX.Y.Z <artifacts> --notes-file RELEASE_NOTES.md`.
+Releases are fully automated by the [`release.yml`](.github/workflows/release.yml) workflow (triggered on `v*` tags, or manually from the **Actions** tab):
 
-Current release: [v0.1.0](https://github.com/DexterLagan/MarkUp/releases/tag/v0.1.0).
+1. Bump the version in `package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`.
+2. Commit and push a tag: `git tag vX.Y.Z && git push origin vX.Y.Z`.
+3. The workflow builds all three platforms in parallel (macOS aarch64 on `macos-latest`, Windows x64 on `windows-latest`, Linux x64 on `ubuntu-latest`) and publishes a GitHub Release with the DMG, NSIS + MSI, and deb + rpm installers.
+
+Current release: [v0.1.0](https://github.com/DexterLagan/MarkUp/releases/tag/v0.1.0) — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64).
 
 ## Roadmap ideas
 

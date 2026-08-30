@@ -14,6 +14,8 @@ import {
   save as saveDialog,
 } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { listen } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 import "./styles.css";
 
 const WELCOME = [
@@ -345,6 +347,19 @@ window.addEventListener("beforeunload", (e) => {
     e.returnValue = "";
   }
 });
+
+listen("markup://open-file", (event) => {
+  const path = event.payload;
+  if (dirty && !confirm("You have unsaved changes. Discard them?")) return;
+  loadFile(path);
+});
+
+invoke("drain_opened_files")
+  .then((paths) => {
+    const last = paths[paths.length - 1];
+    if (last) loadFile(last);
+  })
+  .catch(() => {});
 
 const divider = document.getElementById("divider");
 const editorPane = document.getElementById("editorPane");
