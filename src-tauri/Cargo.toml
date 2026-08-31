@@ -1,6 +1,6 @@
 [package]
 name = "markup"
-version = "0.1.0"
+version = "1.0.0"
 description = "A minimal, fast Markdown editor and visualizer for macOS"
 authors = ["Dexter Santucci"]
 edition = "2021"

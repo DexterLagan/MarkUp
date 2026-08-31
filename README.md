@@ -189,7 +189,7 @@ Releases are fully automated by the [`release.yml`](.github/workflows/release.ym
 2. Commit and push a tag: `git tag vX.Y.Z && git push origin vX.Y.Z`.
 3. The workflow builds all three platforms in parallel (macOS aarch64 on `macos-latest`, Windows x64 on `windows-latest`, Linux x64 on `ubuntu-latest`) and publishes a GitHub Release with the DMG, NSIS + MSI, and deb + rpm installers.
 
-Current release: [v0.1.0](https://github.com/DexterLagan/MarkUp/releases/tag/v0.1.0) — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64).
+Current release: [v1.0.0](https://github.com/DexterLagan/MarkUp/releases/tag/v1.0.0) — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64).
 
 ## Roadmap ideas
 
