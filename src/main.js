@@ -9,11 +9,12 @@ import hljs from "highlight.js";
 import hljsDarkUrl from "highlight.js/styles/github-dark.css?url";
 import hljsLightUrl from "highlight.js/styles/github.css?url";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import {
   open as openDialog,
   save as saveDialog,
 } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, writeTextFile, mkdir } from "@tauri-apps/plugin-fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
@@ -282,7 +283,10 @@ async function loadFile(path) {
   }
 }
 
-let dropLogReady = appDataDir().then((dir) => join(dir, "drop.log"));
+let dropLogReady = appDataDir().then(async (dir) => {
+  await mkdir(dir, { recursive: true }).catch(() => {});
+  return join(dir, "drop.log");
+});
 async function dropLog(line) {
   try {
     const logPath = await dropLogReady;
@@ -400,53 +404,30 @@ divider.addEventListener("pointerup", () => {
 });
 
 let dragDepth = 0;
-window.addEventListener("dragenter", (e) => {
-  e.preventDefault();
-  dragDepth += 1;
-  document.body.classList.add("dragging");
-});
-window.addEventListener("dragleave", (e) => {
-  e.preventDefault();
-  dragDepth = Math.max(0, dragDepth - 1);
-  if (dragDepth === 0) document.body.classList.remove("dragging");
-});
-window.addEventListener("dragover", (e) => e.preventDefault());
-window.addEventListener("drop", async (e) => {
-  e.preventDefault();
-  dragDepth = 0;
-  document.body.classList.remove("dragging");
-  const file = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (!file) {
-    dropLog(`DROP with no file (types: ${e.dataTransfer.types})`);
-    return;
-  }
-  if (file.path) {
-    dropLog(`DROP path="${file.path}" name="${file.name}"`);
-    if (await loadFile(file.path)) {
-      toast(`Opened ${file.name}`);
+getCurrentWebviewWindow().onDragDropEvent(async (event) => {
+  const { type } = event.payload;
+  if (type === "enter") {
+    dragDepth += 1;
+    document.body.classList.add("dragging");
+  } else if (type === "over") {
+    document.body.classList.add("dragging");
+  } else if (type === "leave") {
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) document.body.classList.remove("dragging");
+  } else if (type === "drop") {
+    dragDepth = 0;
+    document.body.classList.remove("dragging");
+    const paths = event.payload.paths || [];
+    dropLog(`DROP paths=${JSON.stringify(paths)}`);
+    const path = paths[paths.length - 1];
+    if (path) {
+      if (await loadFile(path)) {
+        toast(`Opened ${path.split("/").pop()}`);
+      }
     } else {
-      await ingestDroppedText(file);
+      toast("Drop was empty");
     }
-  } else {
-    dropLog(`DROP no path (name: "${file.name}", type: "${file.type}")`);
-    await ingestDroppedText(file);
   }
 });
-
-async function ingestDroppedText(file) {
-  try {
-    const text = await file.text();
-    editorView.dispatch({
-      changes: { from: 0, to: editorView.state.doc.length, insert: text },
-    });
-    currentPath = null;
-    dirty = true;
-    setFileLabel(file.name || "dropped file");
-    syncStatus();
-    toast(`Opened ${file.name || "dropped file"} (contents)`);
-  } catch (err) {
-    toast(`Could not open file: ${err}`);
-  }
-}
 
 syncStatus();
