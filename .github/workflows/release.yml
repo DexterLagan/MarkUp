@@ -50,11 +50,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.0_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.0_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.0_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.0_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.0_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_1.0.1_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_1.0.1_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_1.0.1_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_1.0.1_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_1.0.1_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -102,11 +102,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.0_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.0_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.0_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.0_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.0_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_1.0.1_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_1.0.1_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_1.0.1_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_1.0.1_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_1.0.1_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -167,11 +167,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.0_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.0_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.0_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.0_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.0_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_1.0.1_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_1.0.1_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_1.0.1_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_1.0.1_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_1.0.1_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
