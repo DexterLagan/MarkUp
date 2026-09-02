@@ -225,6 +225,17 @@ function applyTheme(next) {
 document.getElementById("btnTheme").addEventListener("click", () => applyTheme(!isDark));
 applyTheme(isDark);
 
+const btnFullscreen = document.getElementById("btnFullscreen");
+const panes = document.getElementById("panes");
+function setPreviewOnly(on) {
+  panes.classList.toggle("preview-only", on);
+  btnFullscreen.classList.toggle("active", on);
+  btnFullscreen.setAttribute("aria-pressed", String(on));
+}
+btnFullscreen.addEventListener("click", () => {
+  setPreviewOnly(!panes.classList.contains("preview-only"));
+});
+
 const wordCount = document.getElementById("wordCount");
 const charCount = document.getElementById("charCount");
 const cursorPos = document.getElementById("cursorPos");
@@ -361,6 +372,9 @@ window.addEventListener("keydown", (e) => {
   } else if (key === "s") {
     e.preventDefault();
     saveFile();
+  } else if (key === "e") {
+    e.preventDefault();
+    btnFullscreen.click();
   }
 });
 

@@ -114,12 +114,35 @@ button:hover {
 button:active {
   transform: translateY(0.5px);
 }
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  padding: 0;
+}
+.icon-btn svg {
+  flex: none;
+}
+.icon-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
 
 /* panes */
 #panes {
   flex: 1;
   display: flex;
   min-height: 0;
+}
+#panes.preview-only #editorPane,
+#panes.preview-only #divider {
+  display: none;
+}
+#panes.preview-only #previewPane {
+  flex: 1 1 100%;
 }
 #editorPane {
   flex: 1 1 50%;
