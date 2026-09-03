@@ -16,6 +16,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 ## Features
 
 - **Split view** — source editor and rendered preview side by side, with a draggable divider
+- **Full-window preview** — one click hides the source editor for a distraction-free, window-filling view of the rendered document; the splitter and divider return exactly where you left them when toggled off
 - **Live preview** — the rendered document updates as you type (100 ms debounce)
 - **Full GFM Markdown** — tables, strikethrough, task lists, autolinks, and nested lists via remarkable
 - **Code highlighting** — fenced code blocks in the preview highlighted by [highlight.js](https://highlightjs.org) (~190 languages); the editor itself has Markdown syntax highlighting with a GitHub-style palette
@@ -63,7 +64,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 | Title bar | `titleBarStyle: Transparent` — native traffic lights, toolbar acts as the drag region |
 | Window | 1180 × 760 default, 760 × 480 minimum |
 | Panes | Resizable via pointer-drag divider, clamped to 20–80 % editor width |
-| Toolbar | New / Open… / Save / theme toggle buttons; shows current file name |
+| Toolbar | New / Open… / Save / full-window preview / theme toggle buttons; shows current file name |
 | Theme | `prefers-color-scheme` on launch; `◐` button toggles light/dark live |
 | Window title | Mirrors the open file's name |
 
@@ -92,6 +93,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 | New document | `⌘N` | `Ctrl+N` |
 | Open file | `⌘O` | `Ctrl+O` |
 | Save file | `⌘S` | `Ctrl+S` |
+| Full-window preview | `⌘E` | `Ctrl+E` |
 
 ### Platform support
 
