@@ -50,11 +50,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.rpm` | Fedora/RHEL x64 |
+            | DMG | macOS (Apple Silicon) |
+            | NSIS installer | Windows x64 |
+            | MSI installer | Windows x64 |
+            | deb package | Debian/Ubuntu x64 |
+            | rpm package | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -102,11 +102,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.rpm` | Fedora/RHEL x64 |
+            | DMG | macOS (Apple Silicon) |
+            | NSIS installer | Windows x64 |
+            | MSI installer | Windows x64 |
+            | deb package | Debian/Ubuntu x64 |
+            | rpm package | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -167,11 +167,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_${{ github.ref_name | replace('v', '') }}_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_${{ github.ref_name | replace('v', '') }}_amd64.rpm` | Fedora/RHEL x64 |
+            | DMG | macOS (Apple Silicon) |
+            | NSIS installer | Windows x64 |
+            | MSI installer | Windows x64 |
+            | deb package | Debian/Ubuntu x64 |
+            | rpm package | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
