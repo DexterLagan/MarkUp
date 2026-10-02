@@ -14,8 +14,7 @@ import {
   open as openDialog,
   save as saveDialog,
 } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile, mkdir } from "@tauri-apps/plugin-fs";
-import { appDataDir, join } from "@tauri-apps/api/path";
+import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import "./styles.css";
@@ -231,6 +230,7 @@ function setPreviewOnly(on) {
   panes.classList.toggle("preview-only", on);
   btnFullscreen.classList.toggle("active", on);
   btnFullscreen.setAttribute("aria-pressed", String(on));
+  if (!on) requestAnimationFrame(() => editorView.requestMeasure());
 }
 btnFullscreen.addEventListener("click", () => {
   setPreviewOnly(!panes.classList.contains("preview-only"));
@@ -277,39 +277,29 @@ function toast(message) {
   toastTimer = setTimeout(() => toastEl.classList.remove("show"), 3200);
 }
 
+function basename(path) {
+  const parts = String(path).split(/[\\/]/);
+  return parts[parts.length - 1];
+}
+
+function setDocument(content, path = null) {
+  editorView.dispatch({
+    changes: { from: 0, to: editorView.state.doc.length, insert: content },
+  });
+  currentPath = path;
+  dirty = false;
+  setFileLabel(path ? basename(path) : "untitled");
+  syncStatus();
+}
+
 async function loadFile(path) {
   try {
     const content = await readTextFile(path);
-    editorView.dispatch({
-      changes: { from: 0, to: editorView.state.doc.length, insert: content },
-    });
-    currentPath = path;
-    dirty = false;
-    setFileLabel(path.split("/").pop());
-    syncStatus();
+    setDocument(content, path);
     return true;
   } catch (err) {
     toast(`Could not open file: ${err}`);
     return false;
-  }
-}
-
-let dropLogReady = appDataDir().then(async (dir) => {
-  await mkdir(dir, { recursive: true }).catch(() => {});
-  return join(dir, "drop.log");
-});
-async function dropLog(line) {
-  try {
-    const logPath = await dropLogReady;
-    let existing = "";
-    try {
-      existing = await readTextFile(logPath);
-    } catch {
-      /* first entry */
-    }
-    await writeTextFile(logPath, existing + `${new Date().toISOString()}\t${line}\n`);
-  } catch {
-    /* diagnostics only */
   }
 }
 
@@ -338,7 +328,7 @@ async function saveFile() {
   try {
     await writeTextFile(path, editorView.state.doc.toString());
     dirty = false;
-    setFileLabel(path.split("/").pop());
+    setFileLabel(basename(path));
     syncStatus();
   } catch (err) {
     toast(`Could not save file: ${err}`);
@@ -347,13 +337,7 @@ async function saveFile() {
 
 async function newFile() {
   if (dirty && !confirm("You have unsaved changes. Discard them?")) return;
-  editorView.dispatch({
-    changes: { from: 0, to: editorView.state.doc.length, insert: "" },
-  });
-  currentPath = null;
-  dirty = false;
-  setFileLabel("untitled");
-  syncStatus();
+  setDocument("");
 }
 
 document.getElementById("btnNew").addEventListener("click", newFile);
@@ -432,16 +416,33 @@ getCurrentWebviewWindow().onDragDropEvent(async (event) => {
     dragDepth = 0;
     document.body.classList.remove("dragging");
     const paths = event.payload.paths || [];
-    dropLog(`DROP paths=${JSON.stringify(paths)}`);
     const path = paths[paths.length - 1];
     if (path) {
       if (await loadFile(path)) {
-        toast(`Opened ${path.split("/").pop()}`);
+        toast(`Opened ${basename(path)}`);
       }
-    } else {
-      toast("Drop was empty");
     }
   }
+});
+
+// Webview fallback for non-file drops: Tauri's onDragDropEvent reports OS file
+// paths, but a plain-text drag carries none. Claim text drags via the DOM and load
+// them as a new untitled document. File drags stay with the native handler above.
+window.addEventListener("dragover", (e) => {
+  if (e.dataTransfer && Array.from(e.dataTransfer.types).includes("Files")) return;
+  e.preventDefault();
+});
+window.addEventListener("drop", (e) => {
+  if (e.dataTransfer && e.dataTransfer.files.length) return; // file drop → native handler
+  e.preventDefault();
+  if (!e.dataTransfer) return;
+  const text = e.dataTransfer.getData("text/plain");
+  if (!text) return;
+  dragDepth = 0;
+  document.body.classList.remove("dragging");
+  if (dirty && !confirm("You have unsaved changes. Discard them?")) return;
+  setDocument(text);
+  toast(`Loaded ${text.length} characters from drop`);
 });
 
 syncStatus();

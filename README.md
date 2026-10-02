@@ -16,7 +16,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 ## Features
 
 - **Split view** — source editor and rendered preview side by side, with a draggable divider
-- **Full-window preview** — one click hides the source editor for a distraction-free, window-filling view of the rendered document; the splitter and divider return exactly where you left them when toggled off
+- **Full-window preview (on by default)** — the rendered document fills the whole window for a distraction-free reading view; toggle the button (or `⌘E`/`Ctrl+E`) to reveal the source editor, and the splitter and divider return exactly where you left them
 - **Live preview** — the rendered document updates as you type (100 ms debounce)
 - **Full GFM Markdown** — tables, strikethrough, task lists, autolinks, and nested lists via remarkable
 - **Code highlighting** — fenced code blocks in the preview highlighted by [highlight.js](https://highlightjs.org) (~190 languages); the editor itself has Markdown syntax highlighting with a GitHub-style palette
@@ -63,7 +63,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 | --- | --- |
 | Title bar | `titleBarStyle: Transparent` — native traffic lights, toolbar acts as the drag region |
 | Window | 1180 × 760 default, 760 × 480 minimum |
-| Panes | Resizable via pointer-drag divider, clamped to 20–80 % editor width |
+| Panes | Resizable via pointer-drag divider, clamped to 20–80 % editor width; full-window preview (rendered doc only) is the default view |
 | Toolbar | New / Open… / Save / full-window preview / theme toggle buttons; shows current file name |
 | Theme | `prefers-color-scheme` on launch; `◐` button toggles light/dark live |
 | Window title | Mirrors the open file's name |
@@ -81,7 +81,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 
 - **Open dialog filters:** `md`, `markdown`, `mdown`, `txt` (+ all files)
 - **Save dialog:** defaults to `untitled.md`, `md` filter
-- **Drag & drop:** opens dropped files in place (path-based on macOS/Windows; text fallback in the webview)
+- **Drag & drop:** opens dropped files in place (path-based on macOS/Windows); dropping raw text (e.g. from a browser) loads it as a new untitled document
 - **Guards:** dirty state blocks New/Open via confirm dialog and blocks window unload
 - **Associations:** `bundle.fileAssociations` declares `.md` / `.markdown` / `.mdown` with role *Editor* (→ `CFBundleDocumentTypes` on macOS, file-type registrations on Windows, MIME in the `.desktop` entry on Linux). The path is forwarded to the frontend per platform — `RunEvent::Opened` on macOS, the launch argument on Windows/Linux — and queued in Rust (so cold-launch opens aren't lost) before being loaded on startup and live. `tauri-plugin-single-instance` keeps MarkUp to one instance, forwarding the file from a re-launch (Windows/Linux) to the running instance
 - **Setting as default (macOS):** right-click any `.md` → *Get Info* → *Open with* → **MarkUp** → *Change All…* — or double-click once and confirm the picker
@@ -111,7 +111,7 @@ Built with [Tauri 2](https://tauri.app), [CodeMirror 6](https://codemirror.net),
 
 - Access is declared up front through the [Tauri v2 capability system](https://tauri.app/develop/capabilities/) in `src-tauri/capabilities/default.json` — no runtime permission prompts.
 - Granted: `core:default`, `dialog:default`, and fs text/binary read + write with full-disk scope. The native file dialogs are the user-facing gate; the app has **no network commands**.
-- CSP is `null` while in development; tighten before shipping a public build.
+- A restrictive CSP is set in `src-tauri/tauri.conf.json`: `default-src 'self'`, `script-src`/`style-src` scoped to self + inline, `object-src`/`frame-src 'none'`, and no remote sources (only the local Tauri `ipc:`/`http://ipc.localhost` origin is permitted, for the native IPC bridge). Because the Markdown renders into the preview via `innerHTML`, any `<script>` a document embeds is inert — so this blocks injected scripts, iframes, and remote content. Images may still load from `data:` / `file:` / `blob:` for local docs.
 
 ## Repository structure
 
@@ -191,7 +191,19 @@ Releases are fully automated by the [`release.yml`](.github/workflows/release.ym
 2. Commit and push a tag: `git tag vX.Y.Z && git push origin vX.Y.Z`.
 3. The workflow builds all three platforms in parallel (macOS aarch64 on `macos-latest`, Windows x64 on `windows-latest`, Linux x64 on `ubuntu-latest`) and publishes a GitHub Release with the DMG, NSIS + MSI, and deb + rpm installers.
 
-Current release: [v1.0.1](https://github.com/DexterLagan/MarkUp/releases/tag/v1.0.1) — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64).
+Current release: [v1.0.2](https://github.com/DexterLagan/MarkUp/releases/tag/v1.0.2) — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64).
+
+## Changelog
+
+### 1.0.2
+- **Full-window preview is the default** — the rendered document fills the window on launch; toggle the button or `⌘E`/`Ctrl+E` to reveal the editor
+- Fixed the toolbar/window-title file name on **Windows** (a `C:\…\doc.md` path now shows `doc.md`)
+- Dragging **raw text** onto the window (e.g. from a browser) loads it as a new untitled document
+- **Tightened the webview CSP** — no remote sources; blocks scripts, iframes, and remote content injected via Markdown
+- Removed the internal drag & drop diagnostics logging
+
+### 1.0.1
+- Initial public release — DMG (Apple Silicon), NSIS + MSI (Windows x64), deb + rpm (Linux x64)
 
 ## Roadmap ideas
 
