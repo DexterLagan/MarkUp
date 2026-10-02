@@ -39,7 +39,7 @@ jobs:
           name: MarkUp ${{ github.ref_name }}
           fail_on_empty: false
           body: |
-            First release of **MarkUp** — a minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
+            A minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
 
             - Split view: source editor on the left, live-rendered preview on the right
             - Full GFM markdown (tables, task lists, strikethrough) with code highlighting (~190 languages)
@@ -50,11 +50,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.2_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.2_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.2_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.2_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.2_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_${{ github.ref_name#v }}_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_${{ github.ref_name#v }}_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_${{ github.ref_name#v }}_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_${{ github.ref_name#v }}_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_${{ github.ref_name#v }}_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -91,7 +91,7 @@ jobs:
           name: MarkUp ${{ github.ref_name }}
           fail_on_empty: false
           body: |
-            First release of **MarkUp** — a minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
+            A minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
 
             - Split view: source editor on the left, live-rendered preview on the right
             - Full GFM markdown (tables, task lists, strikethrough) with code highlighting (~190 languages)
@@ -102,11 +102,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.2_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.2_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.2_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.2_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.2_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_${{ github.ref_name#v }}_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_${{ github.ref_name#v }}_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_${{ github.ref_name#v }}_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_${{ github.ref_name#v }}_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_${{ github.ref_name#v }}_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
@@ -156,7 +156,7 @@ jobs:
           name: MarkUp ${{ github.ref_name }}
           fail_on_empty: false
           body: |
-            First release of **MarkUp** — a minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
+            A minimal, fast, native-feel markdown editor with live preview, built with Tauri 2, CodeMirror 6, and remarkable.
 
             - Split view: source editor on the left, live-rendered preview on the right
             - Full GFM markdown (tables, task lists, strikethrough) with code highlighting (~190 languages)
@@ -167,11 +167,11 @@ jobs:
 
             | Asset | Platform |
             | --- | --- |
-            | `MarkUp_1.0.2_aarch64.dmg` | macOS (Apple Silicon) |
-            | `MarkUp_1.0.2_x64-setup.exe` | Windows x64 (NSIS installer) |
-            | `MarkUp_1.0.2_x64_en-US.msi` | Windows x64 (MSI) |
-            | `markup_1.0.2_amd64.deb` | Debian/Ubuntu x64 |
-            | `markup_1.0.2_amd64.rpm` | Fedora/RHEL x64 |
+            | `MarkUp_${{ github.ref_name#v }}_aarch64.dmg` | macOS (Apple Silicon) |
+            | `MarkUp_${{ github.ref_name#v }}_x64-setup.exe` | Windows x64 (NSIS installer) |
+            | `MarkUp_${{ github.ref_name#v }}_x64_en-US.msi` | Windows x64 (MSI) |
+            | `markup_${{ github.ref_name#v }}_amd64.deb` | Debian/Ubuntu x64 |
+            | `markup_${{ github.ref_name#v }}_amd64.rpm` | Fedora/RHEL x64 |
 
             > The macOS build is unsigned for now — on first launch, right-click the app and choose **Open**.
           files: |
